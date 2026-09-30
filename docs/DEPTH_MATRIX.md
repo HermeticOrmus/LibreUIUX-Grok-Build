@@ -24,7 +24,15 @@ Never copy Claude plugin / agent / command totals into this inventory. Upstream 
 
 This repo now: **2 melted skills**, **7 stub skills**, **1 stub agent**.
 
-Dogfood copies of every skill live at `.grok/skills/<id>/SKILL.md` and must match `skills/<id>/SKILL.md`.
+Where they live: melted skills in `plugins/libreuiux-grok/skills/<id>/SKILL.md` (the plugin installs them); stubs in `stubs/<id>/SKILL.md` (nothing installs them); the agent in `AGENTS/synthesis-orchestrator.md`.
+
+Dogfood copies of every skill live at `.grok/skills/<id>/SKILL.md` and must match the canonical file above. CI checks it.
+
+Four sources in the table sit outside any pack plugin, so no marketplace installs them: `beginner/design-vocabulary.md` (a learning path), and `.claude/commands/ui-review.md`, `.claude/commands/ui-responsive.md`, `.claude/agents/synthesis-master.md` at the pack's repo root. The matching stubs point at the nearest installable plugin, or say none exists; [stubs/README.md](../stubs/README.md) has the map. `ui-critique` was melted from the root `.claude/commands/ui-critique.md` the same way.
+
+## Pack entries (installed, not melted)
+
+The marketplace also lists every plugin of [LibreUIUX-Claude-Code](https://github.com/HermeticOrmus/LibreUIUX-Claude-Code) as a remote entry: **71 entries**, all pinned to one pack commit (the `sha` in `.grok-plugin/marketplace.json`). Grok reads those plugin folders as they are. They are not counted in the melted inventory above. `scripts/pin-pack.sh` re-pins them; CI fails when the pack gains or loses a plugin.
 
 ## Suite
 
