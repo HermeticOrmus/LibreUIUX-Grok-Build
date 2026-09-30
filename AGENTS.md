@@ -7,7 +7,7 @@
 
 ## How to use this suite
 
-1. Install skills (see [QUICK_START.md](./QUICK_START.md)).
+1. Install the `libreuiux-grok` plugin, plus the pack plugins you need, from this repo's marketplace (see [QUICK_START.md](./QUICK_START.md)).
 2. Keep Reality OS as the global doctrine layer.
 3. Use suite skills for UI/UX work; use `AGENTS/synthesis-orchestrator.md` when a full multi-pillar pass is needed.
 
@@ -23,7 +23,7 @@ Project-level `AGENTS.md` in a consumer repo wins for project rules; this file i
 
 Recognize gold in LibreUIUX-Claude-Code → strip Claude residue → integrate with Grok skills / `.grok/` / MCP → dogfood.
 
-Melted in this pack: `design-principles`, `ui-critique`. The other seven skills and this orchestrator remain stubs. Honest counts: [docs/DEPTH_MATRIX.md](./docs/DEPTH_MATRIX.md).
+Melted in this pack: `design-principles`, `ui-critique`, shipped as the `libreuiux-grok` plugin. The other seven skills remain stubs in [stubs/](./stubs/), each naming the pack plugin with the real depth or saying none does, and this orchestrator remains a stub that nothing installs. Honest counts: [docs/DEPTH_MATRIX.md](./docs/DEPTH_MATRIX.md).
 
 ## Suite
 

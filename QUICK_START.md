@@ -6,44 +6,78 @@ Doctrine first: put [grok-build-reality-os](https://github.com/HermeticOrmus/gro
 
 ## Prerequisites
 
-- `git`
-- Grok Build installed and able to see skills under `.grok/skills/` or `~/.grok/skills/`
+- Grok Build (`grok --version` prints a version)
+- `git` and `jq` for the clone paths and the install-everything loop
 - A web UI project you own, **or** this repo as the working tree
 
 ## Layout this file assumes
 
 Verified against this repository (do not invent extra folders):
 
-```
-skills/<name>/SKILL.md          # canonical skill bodies (copy these)
+```text
+plugins/libreuiux-grok/                      # the Grok-native plugin
+plugins/libreuiux-grok/skills/<name>/SKILL.md  # melted skill bodies (copy these for the manual path)
+stubs/<name>/SKILL.md                        # stub cues; not installed
 AGENTS/synthesis-orchestrator.md
 templates/AGENTS.modern-webapp.md
 docs/DEPTH_MATRIX.md
 docs/MELT_RULES.md
-.grok/skills/<name>/SKILL.md    # dogfood copy; must match skills/
-.grok/plugins/libreuiux-core/   # plugin stub; not required for first run
+.grok-plugin/marketplace.json                # the plugin + every pack plugin, pinned
+.grok/skills/<name>/SKILL.md                 # dogfood copy of the plugin skills and stubs
+stubs/libreuiux-core/                        # v0 plugin bundle stub, kept as the record
 ```
 
-Melted (usable now): `skills/design-principles/SKILL.md`, `skills/ui-critique/SKILL.md`.  
+Melted (usable now): `design-principles`, `ui-critique`, in `plugins/libreuiux-grok/skills/`.  
 Still stubs: the other seven skills + the orchestrator. Honest table: [docs/DEPTH_MATRIX.md](./docs/DEPTH_MATRIX.md).
 
 ## Install (pick one)
 
-### A. Dogfood this repo (fastest)
+### A. Marketplace (recommended)
+
+```bash
+grok plugin marketplace add HermeticOrmus/LibreUIUX-Grok-Build
+grok plugin install libreuiux-grok@libreuiux-grok --trust
+grok plugin details libreuiux-grok
+```
+
+Grok installs a plugin only with `--trust`, because a plugin can run hooks, MCP servers and skills on your machine. Without it, `grok plugin install` stops and asks you to re-run with the flag.
+
+The same marketplace lists every [LibreUIUX-Claude-Code](https://github.com/HermeticOrmus/LibreUIUX-Claude-Code) plugin, pinned to one commit of the pack. Install the ones your project needs by name:
+
+```bash
+grok plugin install design-mastery@libreuiux-grok --trust
+grok plugin install accessibility-compliance@libreuiux-grok --trust
+```
+
+Or install every entry (71 pack plugins plus the Grok-native one):
+
+```bash
+for p in $(grok plugin list --json --available | jq -r '.[] | select(.marketplace == "libreuiux-grok" and .status == "available") | .name'); do
+  grok plugin install "$p@libreuiux-grok" --trust
+done
+```
+
+`libreuiux-hooks` is format-compatible with Grok, but its behavior inside a Grok session is not verified yet (see [LEDGER.md](./LEDGER.md)). Skip it if you only want skills, agents and commands.
+
+To pick up a new pin later: `grok plugin marketplace update`, then `grok plugin update`.
+
+### B. Dogfood this repo
 
 ```bash
 git clone https://github.com/HermeticOrmus/LibreUIUX-Grok-Build.git
 cd LibreUIUX-Grok-Build
-# Skills are already at .grok/skills/ — open this folder in Grok Build.
+# A copy of the skills and stubs is already at .grok/skills/. Open this folder in Grok Build.
 ```
 
-### B. Install into your web project
+### C. Copy into your web project
+
+The v0 path, for a project that should carry the skill files itself.
 
 ```bash
 git clone https://github.com/HermeticOrmus/LibreUIUX-Grok-Build.git ~/LibreUIUX-Grok-Build
 cd /path/to/your-web-project
 mkdir -p .grok/skills
-cp -R ~/LibreUIUX-Grok-Build/skills/* .grok/skills/
+cp -R ~/LibreUIUX-Grok-Build/plugins/libreuiux-grok/skills/* .grok/skills/
 ```
 
 Confirm the copy landed:
@@ -54,17 +88,21 @@ test -f .grok/skills/ui-critique/SKILL.md
 ls .grok/skills
 ```
 
-You should see nine skill directories, matching `skills/` in this repo.
+You should see two skill directories, matching `plugins/libreuiux-grok/skills/` in this repo. The stubs are not copied: they are pointers to pack plugins, not skills.
 
-### C. User-global
+### D. User-global copy
 
 ```bash
 git clone https://github.com/HermeticOrmus/LibreUIUX-Grok-Build.git ~/LibreUIUX-Grok-Build
 mkdir -p ~/.grok/skills
-cp -R ~/LibreUIUX-Grok-Build/skills/* ~/.grok/skills/
+cp -R ~/LibreUIUX-Grok-Build/plugins/libreuiux-grok/skills/* ~/.grok/skills/
 ```
 
-Same two `test -f` checks as B, under `~/.grok/skills/`.
+Same two `test -f` checks as C, under `~/.grok/skills/`.
+
+### Upgrading from v0
+
+If you copied `skills/*` into a project or `~/.grok/skills/`, that copy holds all nine folders, stubs included. Remove the seven stub folders (`design-vocabulary`, `ui-review`, `ui-responsive`, `accessibility-audit`, `brand-systems`, `premium-saas-design`, `frontend-perf`) from the copy, or replace the copy with path A so updates arrive through `grok plugin update`.
 
 ### Optional project rules (merge, do not replace)
 
@@ -88,7 +126,7 @@ You used melted LibreUIUX depth on Grok — not a Claude paste, not a fake agent
 
 ## Smoke checklist
 
-- [ ] `design-principles` and `ui-critique` files exist at the install path you chose
+- [ ] `grok plugin list` shows `libreuiux-grok` (path A), or the two skill files exist at the copy path you chose (C or D)
 - [ ] Grok can see those two skills
 - [ ] One component generated with a named job + focal point
 - [ ] One critique returned with severity-ranked findings and remediations (no `/10` score)
