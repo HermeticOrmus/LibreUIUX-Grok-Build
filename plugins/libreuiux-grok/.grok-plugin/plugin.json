@@ -1,0 +1,11 @@
+{
+  "name": "libreuiux-grok",
+  "version": "1.0.0",
+  "description": "Grok-native LibreUIUX skills: design principles and UI critique. Each has measurable pass and fail checks, a worked example, and an output shape; no scores.",
+  "author": {
+    "name": "Diego Bodart",
+    "url": "https://github.com/HermeticOrmus"
+  },
+  "repository": "https://github.com/HermeticOrmus/LibreUIUX-Grok-Build",
+  "license": "MIT"
+}
